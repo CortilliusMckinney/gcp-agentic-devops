@@ -5,7 +5,7 @@ import requests
 from typing import Optional, Any, Dict, Union
 
 # ✅ Import initialized clients from the previous step
-from agents.clients import openai_client, anthropic_client, headers_cf, CLOUDFLARE_BASE_URL
+from clients import openai_client, anthropic_client, headers_cf, CLOUDFLARE_BASE_URL
 
 class ModelRouter:
     """
