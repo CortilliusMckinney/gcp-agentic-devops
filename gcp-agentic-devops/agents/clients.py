@@ -14,10 +14,16 @@ openai_api_key = get_secret(OPENAI_SECRET, PROJECT_ID)
 cloudflare_api_key = get_secret(CLOUDFLARE_SECRET, PROJECT_ID)
 anthropic_api_key = get_secret(ANTHROPIC_SECRET, PROJECT_ID)
 
-# ✅ Masked output for safety
-print("🔑 Loaded OpenAI Key:", openai_api_key[:8] + "..." + openai_api_key[-4:])
-print("🔑 Loaded Cloudflare Key:", cloudflare_api_key[:8] + "..." + cloudflare_api_key[-4:])
-print("🔑 Loaded Anthropic Key:", anthropic_api_key[:8] + "..." + anthropic_api_key[-4:])
+def safe_preview(key, name):
+    if key:
+        print(f"{name} key starts with: {key[:8]}...")
+    else:
+        print(f"{name} API key not found. Please check Secret Manager.")
+        # Optional: exit(1) if missing keys should stop execution
+
+safe_preview(openai_api_key, "OpenAI")
+safe_preview(cloudflare_api_key, "Cloudflare")
+safe_preview(anthropic_api_key, "Claude")
 
 # 📦 Initialize SDK Clients
 from openai import OpenAI

@@ -82,7 +82,7 @@ cp .env.example .env
 
 ### Environment Variables
 
-- `GOOGLE_CLOUD_PROJECT`: Your GCP project ID
+- `GCP_PROJECT_ID`: Your GCP project ID
 - `GOOGLE_APPLICATION_CREDENTIALS`: Path to service account key file
 - `ANTHROPIC_API_KEY`: Anthropic API key for AI agents
 - `OPENAI_API_KEY`: OpenAI API key (alternative)

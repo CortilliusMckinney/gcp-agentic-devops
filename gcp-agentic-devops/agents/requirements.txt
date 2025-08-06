@@ -1,0 +1,21 @@
+# Core dependencies
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# Google Cloud dependencies
+google-cloud-secret-manager>=2.16.0
+google-cloud-core>=2.3.0
+google-auth>=2.23.0
+
+# AI/ML dependencies
+openai>=1.0.0
+anthropic>=0.7.0
+
+# Development dependencies
+black>=23.0.0
+pytest>=7.0.0
+pytest-mock>=3.10.0
+
+# Optional: Type checking
+mypy>=1.0.0
+types-requests>=2.31.0 
