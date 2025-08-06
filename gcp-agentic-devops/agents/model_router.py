@@ -2,6 +2,7 @@
 
 import json
 import requests
+from typing import Optional, Any, Dict, Union
 
 # ✅ Import initialized clients from the previous step
 from agents.clients import openai_client, anthropic_client, headers_cf, CLOUDFLARE_BASE_URL
@@ -19,7 +20,7 @@ class ModelRouter:
         self.cloudflare_url = CLOUDFLARE_BASE_URL
         self.cloudflare_headers = headers_cf
 
-    def route(self, prompt: str, metadata: dict) -> dict:
+    def route(self, prompt: str, metadata: Dict[str, Any]) -> Dict[str, Any]:
         """
         Routes the incoming prompt to the correct model based on metadata.
 
@@ -41,15 +42,17 @@ class ModelRouter:
         provider = metadata.get("provider", "").lower()
 
         if provider == "openai":
-            return self.call_openai(prompt, metadata.get("model"))
+            model = metadata.get("model")
+            return self.call_openai(prompt, model if model else "gpt-3.5-turbo")
         elif provider == "anthropic":
-            return self.call_anthropic(prompt, metadata.get("model"))
+            model = metadata.get("model")
+            return self.call_anthropic(prompt, model if model else "claude-3-haiku-20240307")
         elif provider == "cloudflare":
             return self.call_cloudflare(prompt)
         else:
             return {"error": f"Unsupported provider: {provider}"}
 
-    def call_openai(self, prompt: str, model: str = "gpt-3.5-turbo") -> dict:
+    def call_openai(self, prompt: str, model: str = "gpt-3.5-turbo") -> Dict[str, Any]:
         """
         Sends the prompt to OpenAI's chat endpoint.
 
@@ -74,7 +77,7 @@ class ModelRouter:
         except Exception as e:
             return {"error": f"OpenAI call failed: {str(e)}"}
 
-    def call_anthropic(self, prompt: str, model: str = "claude-3-haiku-20240307") -> dict:
+    def call_anthropic(self, prompt: str, model: str = "claude-3-haiku-20240307") -> Dict[str, Any]:
         """
         Sends the prompt to Anthropic's Claude chat model.
 
@@ -91,15 +94,20 @@ class ModelRouter:
                 max_tokens=300,
                 messages=[{"role": "user", "content": prompt}]
             )
+            # Handle different content types safely
+            content = response.content[0]
+            # Use string conversion as fallback for all content types
+            response_text = str(content)
+            
             return {
                 "provider": "anthropic",
-                "response": response.content[0].text,
+                "response": response_text,
                 "raw": response
             }
         except Exception as e:
             return {"error": f"Anthropic call failed: {str(e)}"}
 
-    def call_cloudflare(self, prompt: str) -> dict:
+    def call_cloudflare(self, prompt: str) -> Dict[str, Any]:
         """
         Sends the prompt to Cloudflare Workers AI using direct HTTP POST.
 
