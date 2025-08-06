@@ -95,7 +95,7 @@ class TestModelRouterIntegration:
         assert hasattr(router, 'cloudflare_url')
         assert hasattr(router, 'cloudflare_headers')
     
-    @patch('agents.clients.openai_client')
+    @patch('clients.openai_client')
     def test_openai_routing(self, mock_openai, router):
         """Test OpenAI routing with mocked client."""
         # Setup mock response
