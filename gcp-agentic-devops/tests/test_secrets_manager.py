@@ -11,7 +11,7 @@ class TestSecretsManager(unittest.TestCase):
         mock_client_class.return_value = mock_client
         mock_client.access_secret_version.return_value.payload.data.decode.return_value = "test-secret"
 
-        result = secrets_manager.get_secret("my-secret")
+        result = secrets_manager.get_secret("my-secret", "test-project")
         self.assertEqual(result, "test-secret")
         mock_client.access_secret_version.assert_called_once()
 
@@ -22,7 +22,7 @@ class TestSecretsManager(unittest.TestCase):
         mock_client.access_secret_version.side_effect = NotFound("Secret not found")
 
         with self.assertRaises(NotFound):
-            secrets_manager.get_secret("missing-secret")
+            secrets_manager.get_secret("missing-secret", "test-project")
 
 if __name__ == "__main__":
     unittest.main() 
