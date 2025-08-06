@@ -6,7 +6,7 @@ GCP_PROJECT_ID = os.environ.get("GCP_PROJECT_ID", "agentic-devops-464519")
 
 # 🔑 Replace with the secret names from Step 10 of the setup guide
 OPENAI_SECRET_NAME = "openai-api-key"
-CLAUDE_SECRET_NAME = "claude-api-key"
+CLAUDE_SECRET_NAME = "claude-agent-key"
 
 # 🔑 Retrieve API keys from Secret Manager
 openai_api_key = get_secret(OPENAI_SECRET_NAME, GCP_PROJECT_ID)
