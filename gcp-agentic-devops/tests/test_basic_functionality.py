@@ -20,12 +20,12 @@ class TestModuleImports:
     
     def test_secrets_manager_import(self):
         """Test secrets_manager module import."""
-        from agents.secrets_manager import get_secret
+        from secrets_manager import get_secret
         assert get_secret is not None
     
     def test_clients_import(self):
         """Test clients module import."""
-        from agents.clients import openai_client, anthropic_client, headers_cf, CLOUDFLARE_BASE_URL
+        from clients import openai_client, anthropic_client, headers_cf, CLOUDFLARE_BASE_URL
         assert openai_client is not None
         assert anthropic_client is not None
         assert headers_cf is not None
@@ -33,7 +33,7 @@ class TestModuleImports:
     
     def test_model_router_import(self):
         """Test model_router module import."""
-        from agents.model_router import ModelRouter
+        from model_router import ModelRouter
         assert ModelRouter is not None
 
 
@@ -114,8 +114,8 @@ class TestModelRouter:
         sig = inspect.signature(router.route)
         params = list(sig.parameters.keys())
         
-        # Should have self, prompt, and metadata parameters
-        assert len(params) == 3  # self + 2 parameters
+        # Should have prompt and metadata parameters (self is not included in signature)
+        assert len(params) == 2  # prompt + metadata parameters
         assert "prompt" in params
         assert "metadata" in params
 
