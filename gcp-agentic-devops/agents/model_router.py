@@ -43,10 +43,12 @@ class ModelRouter:
 
         if provider == "openai":
             model = metadata.get("model")
-            return self.call_openai(prompt, model if model else "gpt-3.5-turbo")
+            model_str = str(model) if model is not None else "gpt-3.5-turbo"
+            return self.call_openai(prompt, model_str)
         elif provider == "anthropic":
             model = metadata.get("model")
-            return self.call_anthropic(prompt, model if model else "claude-3-haiku-20240307")
+            model_str = str(model) if model is not None else "claude-3-haiku-20240307"
+            return self.call_anthropic(prompt, model_str)
         elif provider == "cloudflare":
             return self.call_cloudflare(prompt)
         else:
