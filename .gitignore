@@ -38,6 +38,7 @@ venv.bak/
 
 # IDE
 .vscode/
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo
@@ -115,6 +116,9 @@ celerybeat.pid
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Pyright configuration (keep this file)
+# pyrightconfig.json
 
 # Pyre type checker
 .pyre/ 
