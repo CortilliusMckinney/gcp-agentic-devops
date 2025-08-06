@@ -70,7 +70,10 @@ try:
         max_tokens=20,
         messages=[{"role": "user", "content": "Test response"}]
     )
-    print("✅ Anthropic Test Response:", response.content[0].text)
+    # Handle different content types safely
+    content = response.content[0]
+    response_text = str(content)
+    print("✅ Anthropic Test Response:", response_text)
 except Exception as e:
     print("❌ Anthropic test failed:", str(e))
 
