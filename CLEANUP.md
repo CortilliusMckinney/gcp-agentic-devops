@@ -6,197 +6,118 @@ This guide helps you properly clean up all cloud resources created during the Ag
 
 ## Quick Start
 
-For complete resource removal:
+The cleanup scripts are intelligent and user-friendly - they'll automatically prompt for any required configuration:
 
 ```bash
-cd ~/Documents/GitHub/gcp-agentic-devops/teardown
+cd teardown
 chmod +x cleanup-resources.sh
 ./cleanup-resources.sh
 ```
 
 ---
 
+## Smart Cleanup Scripts
+
+### Automatic Configuration
+
+Both cleanup scripts are enhanced with automatic configuration detection:
+
+- **First run**: Scripts detect placeholder values and prompt you for your actual GCP region and project ID
+- **Subsequent runs**: Scripts remember your configuration and run without prompting
+- **Clear feedback**: Scripts show exactly what's being deleted vs. what's already gone
+
+### Intelligent Error Handling
+
+Instead of confusing error messages, you'll see clean status updates:
+
+- ✅ "Deleted resource: [name]" - Successfully removed
+- ℹ️ "Resource already deleted or does not exist" - Nothing to do
+- Clear section-by-section progress with organized output
+
+---
+
 ## What Gets Cleaned Up
 
 **Cloud Functions:**
-
 - diagnoser-agent, validator-agent, remediator-agent
 - log-analytics-processor
 - diagnose-event, validate-fix-event, remediate-event
 
 **Pub/Sub Resources:**
-
 - pipeline-events, validation-requests, remediation-tasks topics
 - log-analytics topic and test-analytics-sub subscription
 
 **Data Storage:**
-
 - BigQuery agent_analytics dataset and all tables
 - Cloud Logging analytics-sink
 
 **Security Resources:**
-
 - Secret Manager secrets (API keys and tokens)
 - IAM service accounts created for the project
 
 **Infrastructure:**
-
 - All Terraform-managed resources
 - Terraform state files
 
 ---
 
-## Setup Cleanup Scripts
+## Cleanup Options
 
-Navigate to teardown directory:
+### Option 1: Complete Cleanup (Recommended)
+
+Removes all resources to eliminate ongoing costs:
 
 ```bash
-cd ~/Documents/GitHub/gcp-agentic-devops
-mkdir -p teardown
 cd teardown
-```
-
-### Complete Cleanup Script
-
-Create teardown/cleanup-resources.sh:
-
-```bash
-cat > cleanup-resources.sh << 'EOF'
-#!/bin/bash
-
-echo "🧹 Agentic DevOps System Teardown"
-echo "This will remove all project resources to prevent ongoing charges"
-echo ""
-
-read -p "Are you sure you want to delete all resources? (yes/no): " confirm
-if [ "$confirm" != "yes" ]; then
-    echo "Teardown cancelled"
-    exit 0
-fi
-
-echo "📋 Cleaning up Cloud Functions..."
-gcloud functions delete diagnose-event --region=YOUR_REGION --quiet
-gcloud functions delete validate-fix-event --region=YOUR_REGION --quiet
-gcloud functions delete remediate-event --region=YOUR_REGION --quiet
-gcloud functions delete log-analytics-processor --region=YOUR_REGION --quiet
-gcloud functions delete diagnoser-agent --region=YOUR_REGION --quiet
-gcloud functions delete validator-agent --region=YOUR_REGION --quiet
-gcloud functions delete remediator-agent --region=YOUR_REGION --quiet
-echo "✅ Cloud Functions deleted"
-
-echo "📋 Cleaning up Pub/Sub resources..."
-gcloud pubsub subscriptions delete test-analytics-sub --quiet
-gcloud pubsub topics delete pipeline-events --quiet
-gcloud pubsub topics delete validation-requests --quiet
-gcloud pubsub topics delete remediation-tasks --quiet
-gcloud pubsub topics delete log-analytics --quiet
-echo "✅ Pub/Sub resources deleted"
-
-echo "📋 Cleaning up BigQuery resources..."
-bq rm -r -f YOUR_PROJECT_ID:agent_analytics
-echo "✅ BigQuery dataset deleted"
-
-echo "📋 Cleaning up Cloud Logging sinks..."
-gcloud logging sinks delete analytics-sink --quiet
-echo "✅ Logging sinks deleted"
-
-echo "📋 Cleaning up Secret Manager secrets..."
-gcloud secrets delete openai-api-key --quiet
-gcloud secrets delete anthropic-api-key --quiet
-gcloud secrets delete cloudflare-api-token --quiet
-gcloud secrets delete cloudflare-account-id --quiet
-echo "✅ Secrets deleted"
-
-echo "📋 Cleaning up IAM service accounts..."
-PROJECT_ID=$(gcloud config get-value project)
-gcloud iam service-accounts delete agentic-devops@${PROJECT_ID}.iam.gserviceaccount.com --quiet
-echo "✅ Service accounts deleted"
-
-echo "📋 Cleaning up Terraform state..."
-cd ../terraform
-terraform destroy -auto-approve
-rm -f terraform.tfstate*
-rm -rf .terraform/
-echo "✅ Terraform resources destroyed"
-
-echo ""
-echo "🎯 Teardown Summary"
-echo "==================="
-echo "✅ All Cloud Functions removed"
-echo "✅ All Pub/Sub topics and subscriptions deleted"
-echo "✅ BigQuery dataset and tables removed"
-echo "✅ Cloud Logging sinks deleted"
-echo "✅ Secret Manager secrets removed"
-echo "✅ IAM service accounts deleted"
-echo "✅ Terraform infrastructure destroyed"
-echo ""
-echo "💰 Expected cost impact: ~$0/month (all billable resources removed)"
-echo "🔐 Security impact: All API keys and sensitive data removed"
-EOF
-```
-
-### Selective Cleanup Script
-
-Create teardown/selective-cleanup.sh:
-
-```bash
-cat > selective-cleanup.sh << 'EOF'
-#!/bin/bash
-
-echo "🎯 Selective Resource Cleanup"
-echo "Choose what to keep for portfolio demonstrations"
-echo ""
-
-echo "Resources that incur ongoing costs:"
-echo "1. Cloud Functions (minimal cost, ~$0.01/day)"
-echo "2. BigQuery storage (minimal cost, ~$0.02/month)" 
-echo "3. Secret Manager secrets (minimal cost, ~$0.06/month)"
-echo ""
-
-echo "Resources that are free:"
-echo "- Pub/Sub topics (free tier: 10GB/month)"
-echo "- Cloud Logging (free tier: 50GB/month)"
-echo "- IAM service accounts (free)"
-echo ""
-
-read -p "Delete Cloud Functions to stop compute costs? (y/n): " delete_functions
-read -p "Delete BigQuery data to stop storage costs? (y/n): " delete_bigquery
-read -p "Delete Secret Manager secrets? (y/n): " delete_secrets
-
-if [ "$delete_functions" = "y" ]; then
-    echo "Deleting Cloud Functions..."
-    gcloud functions list --format="value(name,region)" | while read name region; do
-        gcloud functions delete $name --region=$region --quiet
-    done
-    echo "✅ Cloud Functions deleted"
-fi
-
-if [ "$delete_bigquery" = "y" ]; then
-    echo "Deleting BigQuery dataset..."
-    bq rm -r -f YOUR_PROJECT_ID:agent_analytics
-    echo "✅ BigQuery dataset deleted"
-fi
-
-if [ "$delete_secrets" = "y" ]; then
-    echo "Deleting secrets..."
-    gcloud secrets delete openai-api-key --quiet
-    gcloud secrets delete anthropic-api-key --quiet  
-    gcloud secrets delete cloudflare-api-token --quiet
-    gcloud secrets delete cloudflare-account-id --quiet
-    echo "✅ Secrets deleted"
-fi
-
-echo ""
-echo "🎯 Selective cleanup complete"
-echo "Remaining resources can be used for portfolio demonstrations"
-EOF
-```
-
-### Make Scripts Executable
-
-```bash
 chmod +x cleanup-resources.sh
+./cleanup-resources.sh
+```
+
+**First run example:**
+```
+🧹 Agentic DevOps System Teardown
+⚠️  Configuration required before running cleanup
+
+Enter your GCP region (e.g., us-central1, europe-west1):
+Region: us-central1
+✅ Region updated to: us-central1
+
+Enter your GCP project ID:
+Project ID: my-project-123
+✅ Project ID updated to: my-project-123
+
+Configuration complete. Continuing with cleanup...
+```
+
+### Option 2: Selective Cleanup
+
+Keep some resources for portfolio demonstrations:
+
+```bash
+cd teardown
 chmod +x selective-cleanup.sh
+./selective-cleanup.sh
+```
+
+Choose which resource types to delete while preserving others for demos.
+
+---
+
+## Expected Output
+
+With the enhanced scripts, you'll see organized, clear output:
+
+```
+📋 Cleaning up Cloud Functions...
+   ✅ Deleted function: diagnose-event
+   ✅ Deleted function: log-analytics-processor
+   ℹ️  Function validator-agent already deleted or does not exist
+✅ Cloud Functions cleanup complete
+
+📋 Cleaning up Pub/Sub resources...
+   ℹ️  Topic pipeline-events already deleted or does not exist
+   ℹ️  Topic log-analytics already deleted or does not exist
+✅ Pub/Sub resources cleanup complete
 ```
 
 ---
@@ -226,8 +147,8 @@ Before cleanup, consider exporting key data:
 bq extract --destination_format=CSV agent_analytics.metrics gs://your-bucket/portfolio-data.csv
 
 # Save function configurations
-gcloud functions describe diagnose-event --region=YOUR_REGION > diagnose-event-config.yaml
-gcloud functions describe validate-fix-event --region=YOUR_REGION > validate-fix-event-config.yaml
+gcloud functions describe diagnose-event --region=us-central1 > diagnose-event-config.yaml
+gcloud functions describe validate-fix-event --region=us-central1 > validate-fix-event-config.yaml
 
 # Backup Terraform state
 cp terraform/terraform.tfstate teardown/terraform-backup.tfstate
@@ -266,42 +187,32 @@ Expected result: No resources related to the agentic-devops project should remai
 ## Troubleshooting
 
 **Permission errors:**
-
 ```bash
 # Ensure you're authenticated
 gcloud auth login
 gcloud config set project YOUR_PROJECT_ID
 ```
 
-**Resource not found errors:**
+**Script doesn't prompt for configuration:**
+- The scripts automatically detect if configuration is needed
+- If placeholders were already replaced, no prompting occurs
+- To reconfigure, manually edit the script files to restore placeholder values
 
-- These are normal if resources were already deleted
-- The cleanup script continues despite individual resource failures
-
-**Terraform destroy failures:**
-
-```bash
-# Force remove Terraform state if destroy fails
-cd terraform
-rm -rf .terraform/
-rm terraform.tfstate*
-```
-
-**Billing concerns:**
-
-- Check the GCP billing console to confirm all resources are removed
-- Some resources may have a 24-48 hour delay before showing as deleted in billing
+**Multiple cleanup runs:**
+- It's safe to run cleanup scripts multiple times
+- Scripts intelligently handle already-deleted resources
+- No errors or confusion from repeated runs
 
 ---
 
 ## What This Demonstrates
 
 Proper resource cleanup showcases:
-
 - Professional cloud cost management skills
 - Infrastructure lifecycle management understanding
 - Security best practices (removing API keys and sensitive data)
 - Production operations experience with teardown procedures
+- User-friendly automation and error handling
 
 These are valuable skills that employers look for in cloud engineering roles.
 
