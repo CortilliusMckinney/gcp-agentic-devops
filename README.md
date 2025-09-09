@@ -67,8 +67,10 @@ This system demonstrates advanced cloud engineering and AI integration skills th
 
 ### Core Components
 
-- **Diagnoser Agent**: Analyzes failures and proposes fixes 
+- **Diagnoser Agent**: Analyzes failures and proposes fixes
+
 using multi-model AI routing
+
 - **Validator Agent**: Validates proposed fixes against security policies and safety rules
 - **Remediator Agent**: Executes approved fixes with complete audit logging
 - **Analytics Pipeline**: Collects metrics for predictive intelligence and cost optimization
