@@ -1,0 +1,6 @@
+# Same deps as diagnoser; shared agents rely on these
+google-cloud-pubsub
+google-cloud-secret-manager
+requests
+openai
+anthropic

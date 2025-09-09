@@ -1,0 +1,6 @@
+functions-framework==3.*
+google-cloud-pubsub==2.*
+google-cloud-secret-manager==2.*
+requests==2.*
+anthropic==0.25.0
+httpx==0.24.1
