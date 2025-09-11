@@ -2,6 +2,19 @@
 
 An enterprise-grade DevOps automation system that uses AI agents to autonomously detect, diagnose, and remediate pipeline failures with complete audit trails and predictive analytics.
 
+## 🏗️ Architecture
+
+The following diagram shows the complete autonomous DevOps healing system:
+
+![Agentic DevOps Architecture](docs/architecture-diagrams/system-overview.png "Full Architecture: Agentic DevOps Pipeline on GCP")
+
+This architecture demonstrates:
+- **Three-agent AI pipeline** with safety validation between each step
+- **Real-time observability** with Datadog integration and predictive analytics
+- **Infrastructure healing** capabilities for autonomous drift remediation  
+- **Multi-model AI routing** for cost optimization and reliability
+- **Complete audit trails** for enterprise compliance requirements
+
 <details>
 <summary>📁 Project Structure</summary>
 
@@ -11,6 +24,7 @@ gcp-agentic-devops/
 ├── CLEANUP.md                   # Resource teardown guide
 ├── .gitignore                   # Git ignore file
 ├── docs/                        # Documentation
+│   ├── architecture-diagrams/  # System architecture visuals
 │   ├── part1-foundation.md      # Foundation setup guide
 │   ├── part2-agents.md          # AI agents implementation
 │   └── part3-observability.md   # Monitoring and analytics
@@ -30,9 +44,12 @@ gcp-agentic-devops/
 │   ├── analytics/               # Log analytics processor
 │   ├── final-validation.sh     # End-to-end testing
 │   └── setup-bigquery.sh       # BigQuery setup
-└── scripts/                     # Deployment scripts
-    ├── deploy_agents.sh         # Deploy all agents
-    └── test_pipeline.sh         # Test the system
+├── scripts/                     # Deployment scripts
+│   ├── deploy_agents.sh         # Deploy all agents
+│   └── test_pipeline.sh         # Test the system
+└── teardown/                    # Resource management
+    ├── cleanup-resources.sh     # Complete automated cleanup
+    └── selective-cleanup.sh     # Selective resource removal
 ```
 
 </details>
@@ -45,15 +62,7 @@ This system demonstrates advanced cloud engineering and AI integration skills th
 - **Enterprise Security**: Safety validation, audit trails, and RBAC compliance
 - **Predictive Analytics**: ML-powered failure prediction and cost optimization
 - **Production Observability**: Real-time monitoring with Datadog integration
-
-## 🏗️ Architecture
-
-### Core Components
-
-- **Diagnoser Agent**: Analyzes failures and proposes fixes using multi-model AI routing
-- **Validator Agent**: Validates proposed fixes against security policies and safety rules
-- **Remediator Agent**: Executes approved fixes with complete audit logging
-- **Analytics Pipeline**: Collects metrics for predictive intelligence and cost optimization
+- **Cost-Conscious Design**: Intelligent resource management with automated cleanup
 
 ## 🚀 Technical Stack
 
@@ -163,6 +172,30 @@ Access your Datadog dashboard to view:
 - **Secret Management**: API keys stored in Google Secret Manager
 - **IAM Controls**: Least-privilege access for all components
 
+## 💰 Resource Management
+
+This project includes enterprise-grade resource lifecycle management:
+
+### Automated Cleanup
+- **Intelligent Detection**: Automatically discovers all project resources
+- **Safe Teardown**: Stops Dataflow jobs before removing dependent resources
+- **Cost Prevention**: Eliminates ongoing charges with one command
+- **Comprehensive Coverage**: Handles all GCP services used in the project
+
+### Production-Ready Operations
+- **Configuration Management**: Self-configuring scripts with placeholder detection
+- **Error Handling**: Graceful handling of missing or already-deleted resources
+- **Verification**: Built-in commands to confirm complete cleanup
+- **Documentation**: Complete teardown procedures in [CLEANUP.md](CLEANUP.md)
+
+```bash
+# Complete project teardown
+cd teardown
+./cleanup-resources.sh
+```
+
+The cleanup system demonstrates professional cloud cost management and operational maturity.
+
 ## 📚 Portfolio Highlights
 
 This project demonstrates:
@@ -172,10 +205,25 @@ This project demonstrates:
 - **Production Operations**: Monitoring, alerting, incident response
 - **Infrastructure as Code**: Complete Terraform automation
 - **Security Engineering**: Zero-trust validation and audit compliance
+- **Cost Management**: Automated resource lifecycle and cleanup procedures
+- **Operational Excellence**: Complete teardown and verification processes
 
-## 🧹 Cleanup
+## 🧹 Cost-Conscious Cleanup
 
-To avoid ongoing costs, see [CLEANUP.md](CLEANUP.md) for complete resource teardown instructions.
+To avoid ongoing costs, this project includes comprehensive automated cleanup:
+
+**Quick Cleanup:**
+```bash
+cd teardown && ./cleanup-resources.sh
+```
+
+**Features:**
+- Automatically stops Dataflow jobs to prevent resource recreation
+- Discovers and removes all project resources dynamically
+- Handles dependencies (storage buckets, instance templates, etc.)
+- Provides verification commands to confirm complete removal
+
+See [CLEANUP.md](CLEANUP.md) for detailed teardown documentation and selective cleanup options.
 
 ## 🤝 Contributing
 
@@ -187,4 +235,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Built as part of advanced cloud engineering skill development.**
+**Built as part of advanced cloud engineering skill development with production-ready operational practices.**
